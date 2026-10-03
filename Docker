@@ -27,3 +27,30 @@ COPY app.py .
 EXPOSE 8080
 
 CMD ["python", "app.py"]
+//Nodejs
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+
+    res.end(
+        '<h1>Cloud Computing Practical: Docker Service Running Successfully!</h1>'
+    );
+});
+
+server.listen(8080, '0.0.0.0', () => {
+    console.log('Server running on port 8080...');
+});
+//docker
+FROM node:18-slim
+
+WORKDIR /app
+
+COPY app.js .
+
+EXPOSE 8080
+
+CMD ["node", "app.js"]
