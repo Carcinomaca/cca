@@ -1,0 +1,74 @@
+//CurrencyServer.java
+import com.sun.net.httpserver.*;
+import java.io.*;
+import java.net.*;
+
+public class CurrencyServer {
+    public static void main(String[] args) throws Exception {
+
+        HttpServer server =
+            HttpServer.create(new InetSocketAddress(8080), 0);
+
+        server.createContext("/api/convert", e -> {
+
+            if (!e.getRequestMethod().equals("GET")) {
+                e.sendResponseHeaders(405, -1);
+                e.close();
+                return;
+            }
+
+            String query = e.getRequestURI().getQuery();
+            double rupees = Double.parseDouble(query.split("=")[1]);
+
+            double dollars = rupees * 95;
+
+            String response =
+                "{\"rupees\":" + rupees +
+                ",\"dollars\":" + dollars +
+                ",\"status\":\"SUCCESS\"}";
+
+            byte[] data = response.getBytes();
+
+            e.getResponseHeaders().set(
+                "Content-Type", "application/json");
+
+            e.sendResponseHeaders(200, data.length);
+            e.getResponseBody().write(data);
+            e.close();
+        });
+
+        server.start();
+        System.out.println("Server started on port 8080");
+    }
+}
+//ClientApp.java
+import java.net.*;
+import java.net.http.*;
+import java.util.*;
+
+public class ClientApp {
+    public static void main(String[] args) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Rupees: ");
+        double rupees = sc.nextDouble();
+
+        String url =
+            "http://localhost:8080/api/convert?rupees=" + rupees;
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .GET()
+            .build();
+
+        HttpResponse<String> response =
+            client.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Status: " + response.statusCode());
+        System.out.println("Response: " + response.body());
+    }
+}
