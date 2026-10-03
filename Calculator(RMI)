@@ -1,0 +1,87 @@
+//Calculator.java
+import java.rmi.*;
+
+public interface Calculator extends Remote {
+
+    int add(int a, int b) throws RemoteException;
+}
+//CalculatorImpl.java
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class CalculatorImpl
+        extends UnicastRemoteObject
+        implements Calculator {
+
+    public CalculatorImpl() throws RemoteException {
+        super();
+    }
+
+    public int add(int a, int b)
+            throws RemoteException {
+
+        return a + b;
+    }
+}
+//RMIServer.java
+import java.rmi.registry.*;
+
+public class RMIServer {
+    public static void main(String[] args) {
+
+        try {
+
+            Calculator calculator =
+                new CalculatorImpl();
+
+            Registry registry =
+                LocateRegistry.createRegistry(1099);
+
+            registry.rebind(
+                "CalculatorService",
+                calculator
+            );
+
+            System.out.println(
+                "RMI server is running...");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+//RMIClient.java
+import java.rmi.registry.*;
+import java.util.*;
+
+public class RMIClient {
+    public static void main(String[] args) {
+
+        try {
+
+            Registry registry =
+                LocateRegistry.getRegistry(
+                    "localhost", 1099);
+
+            Calculator calculator =
+                (Calculator) registry.lookup(
+                    "CalculatorService");
+
+            Scanner sc = new Scanner(System.in);
+
+            System.out.print("Enter first number: ");
+            int a = sc.nextInt();
+
+            System.out.print("Enter second number: ");
+            int b = sc.nextInt();
+
+            int result = calculator.add(a, b);
+
+            System.out.println(
+                "Result: " + result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
