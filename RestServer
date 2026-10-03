@@ -1,0 +1,41 @@
+//RestServer.java
+import com.sun.net.httpserver.*;
+import java.io.*;
+import java.net.*;
+
+public class RestServer {
+    public static void main(String[] args) throws Exception {
+
+        HttpServer server =
+            HttpServer.create(new InetSocketAddress(8080), 0);
+
+        server.createContext("/api/hello", e -> {
+
+            String response =
+                "{\"message\":\"Hello,Kaushal\"}";
+
+            e.getResponseHeaders().set(
+                "Content-Type", "application/json");
+
+            e.sendResponseHeaders(200, response.length());
+            e.getResponseBody().write(response.getBytes());
+            e.close();
+        });
+
+        server.createContext("/api/status", e -> {
+
+            String response =
+                "{\"status\":\"UP\",\"database\":\"Connected\"}";
+
+            e.getResponseHeaders().set(
+                "Content-Type", "application/json");
+
+            e.sendResponseHeaders(200, response.length());
+            e.getResponseBody().write(response.getBytes());
+            e.close();
+        });
+
+        server.start();
+        System.out.println("Server running...");
+    }
+}
