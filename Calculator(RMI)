@@ -85,3 +85,41 @@ public class RMIClient {
         }
     }
 }
+//Celsius → Fahrenheit
+double f = (c * 9 / 5) + 32;
+//Factorial
+int fact = 1;
+
+for(int i=1; i<=n; i++)
+    fact *= i;
+//Prime Number
+boolean prime = true;
+
+if(n < 2)
+    prime = false;
+
+for(int i=2; i<=n/2; i++)
+    if(n%i == 0)
+        prime = false;
+//Palindrome
+int temp = n, rev = 0;
+
+while(n > 0) {
+    int d = n % 10;
+    rev = rev * 10 + d;
+    n /= 10;
+}
+
+System.out.println(temp == rev ? "Palindrome" : "Not Palindrome");
+//Armstrong
+int temp = n, sum = 0;
+
+while(n > 0) {
+    int d = n % 10;
+    sum += d * d * d;
+    n /= 10;
+}
+
+System.out.println(temp == sum ? "Armstrong" : "Not Armstrong");
+//Simple Interest
+double si = (p * r * t) / 100;
