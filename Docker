@@ -54,3 +54,6 @@ COPY app.js .
 EXPOSE 8080
 
 CMD ["node", "app.js"]
+
+docker build -t practical8 .
+docker run -p 8081:8080 practical8
